@@ -1,10 +1,12 @@
 package ru.romanbrazhnikov.userformsender.application.model;
 
+import java.io.Serializable;
+
 /**
  * Created by roman on 20.10.17.
  */
 
-public class UserForm {
+public class UserForm implements Serializable{
     private String mEmail;
     private String mPhone;
     private String mPassword;

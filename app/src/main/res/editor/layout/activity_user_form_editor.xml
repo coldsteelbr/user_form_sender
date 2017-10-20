@@ -20,6 +20,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -33,9 +34,9 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/et_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:hint="@string/phone"/>
 
     </android.support.design.widget.TextInputLayout>
@@ -46,8 +47,10 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:ems="10"
             android:hint="@string/password"/>
 
