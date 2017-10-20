@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">User Form Sender</string>
+
+    <string name="email">E-mail</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="view">View</string>
+    <string name="send_by_mail">Send by mail</string>
+</resources>

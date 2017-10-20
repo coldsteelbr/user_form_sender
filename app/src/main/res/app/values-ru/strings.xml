@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">User Form Sender</string>
+
+    <string name="email">Е-мейл</string>
+    <string name="phone">Телефон</string>
+    <string name="password">Пароль</string>
+    <string name="view">Просмотреть</string>
+    <string name="send_by_mail">Отправить по е-мейлу</string>
+</resources>
