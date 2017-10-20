@@ -6,4 +6,11 @@
     <string name="password">Password</string>
     <string name="view">View</string>
     <string name="send_by_mail">Send by mail</string>
+
+    <!-- Error messages -->
+    <string name="err_email_is_wrong">Email is not valid</string>
+    <string name="err_phone_is_wrong">Phone is not valid</string>
+    <string name="err_password_must_be_longer_than_six">Password must be at least 6 characters long</string>
+    <string name="err_password_must_contain_one_letter">Password must contain at least one digit</string>
+    <string name="err_password_must_contain_one_digit">Password must contain at least one letter</string>
 </resources>

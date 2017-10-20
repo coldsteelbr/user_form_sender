@@ -6,10 +6,12 @@ import java.io.Serializable;
  * Created by roman on 20.10.17.
  */
 
-public class UserForm implements Serializable{
+public class UserForm implements Serializable {
     private String mEmail;
     private String mPhone;
     private String mPassword;
+    private String mPicturePath;
+
 
     public String getEmail() {
         return mEmail;
@@ -34,4 +36,13 @@ public class UserForm implements Serializable{
     public void setPassword(String password) {
         mPassword = password;
     }
+
+    public String getPicturePath() {
+        return mPicturePath;
+    }
+
+    public void setPicturePath(String picturePath) {
+        mPicturePath = picturePath;
+    }
+
 }
