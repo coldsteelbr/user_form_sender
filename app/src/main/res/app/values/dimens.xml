@@ -6,6 +6,9 @@
     <dimen name="md_padding_double">32dp</dimen>
     <dimen name="md_list_item_height">72dp</dimen>
 
+    <!-- -->
+    <dimen name="photo_button_size">100dp</dimen>
+
     <!-- Font -->
     <dimen name="text_normal">16sp</dimen>
 
