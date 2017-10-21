@@ -11,8 +11,8 @@ import ru.romanbrazhnikov.userformsender.application.model.UserForm;
  * Created by roman on 21.10.17.
  */
 
-public class EmailSender {
-    public static void openChooser(UserForm form, Context context) {
+public class ImplicitActions {
+    public static void openEmailChooser(UserForm form, Context context) {
 
         Intent emailIntent
                 = new Intent(
@@ -35,4 +35,6 @@ public class EmailSender {
                 Intent.createChooser(emailIntent, context.getString(R.string.send_by_mail)));
 
     }
+
+    // TODO: CAMERA HERE
 }

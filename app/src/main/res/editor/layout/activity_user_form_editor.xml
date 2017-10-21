@@ -14,7 +14,7 @@
 
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/my_image_view"
+        android:id="@+id/img_take_picture"
         android:layout_width="@dimen/photo_button_size"
         android:layout_height="@dimen/photo_button_size"
         android:layout_gravity="center_horizontal"
@@ -26,6 +26,14 @@
         fresco:backgroundImage="@color/colorAccentBlueGrey"
         fresco:roundingBorderWidth="2dp"
         fresco:roundingBorderColor="@color/colorAccent"/>
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/img_picture_holder"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/md_padding_normal"/>
 
     <!-- E-MAIL -->
     <android.support.design.widget.TextInputLayout

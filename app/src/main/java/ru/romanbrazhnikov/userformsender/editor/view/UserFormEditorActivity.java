@@ -1,39 +1,73 @@
 package ru.romanbrazhnikov.userformsender.editor.view;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.io.File;
+import java.io.IOException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.romanbrazhnikov.userformsender.R;
 import ru.romanbrazhnikov.userformsender.application.model.UserForm;
+import ru.romanbrazhnikov.userformsender.utils.PictureUtils;
 import ru.romanbrazhnikov.userformsender.utils.ValidationUtils;
 import ru.romanbrazhnikov.userformsender.viewer.view.UserFormViewerActivity;
 
 public class UserFormEditorActivity extends AppCompatActivity {
 
+    // CONSTANTS
+    private static final int CAMERA_REQUEST = 0;
+
     // WIDGETS
-    private EditText etEmail;
-    private EditText etPhone;
-    private EditText etPassword;
+    @BindView(R.id.img_take_picture)
+    SimpleDraweeView imgTakePicture;
 
-    private TextInputLayout tilEmail;
-    private TextInputLayout tilPhone;
-    private TextInputLayout tilPassword;
+    @BindView(R.id.img_picture_holder)
+    ImageView imgPictureHolder;
 
-    private Button bView;
+    @BindView(R.id.et_email)
+    EditText etEmail;
+    @BindView(R.id.et_phone)
+    EditText etPhone;
+    @BindView(R.id.et_password)
+    EditText etPassword;
 
-    private LinearLayout ll_root;
+    @BindView(R.id.til_email)
+    TextInputLayout tilEmail;
+    @BindView(R.id.til_phone)
+    TextInputLayout tilPhone;
+    @BindView(R.id.til_password)
+    TextInputLayout tilPassword;
+
+    @BindView(R.id.b_view)
+    Button bView;
+
+    @BindView(R.id.ll_root)
+    LinearLayout ll_root;
 
     // FIELDS
     UserForm mUserForm = new UserForm();
+    File mPhotoFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +80,43 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
     }
 
+    private void updateImgHolder() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+            imgPictureHolder.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = PictureUtils.getScaledBitmap(
+                    mPhotoFile.getPath(), this);
+            imgPictureHolder.setImageBitmap(bitmap);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
+                //Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+                imgTakePicture.setVisibility(View.GONE);
+                imgPictureHolder.setVisibility(View.VISIBLE);
+                updateImgHolder();
+
+                Log.d("Camera: PATH", mPhotoFile.getPath());
+                Log.d("Camera: ABS:", mPhotoFile.getAbsolutePath());
+                try {
+                    Log.d("Camera: CAN:", mPhotoFile.getCanonicalPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private void initWidgets() {
-        ll_root = (LinearLayout) findViewById(R.id.ll_root);
+        ButterKnife.bind(this);
 
-        etEmail = (EditText) findViewById(R.id.et_email);
-        etPhone = (EditText) findViewById(R.id.et_phone);
-        etPassword = (EditText) findViewById(R.id.et_password);
-
-        tilEmail = (TextInputLayout) findViewById(R.id.til_email);
-        tilPhone = (TextInputLayout) findViewById(R.id.til_phone);
-        tilPassword = (TextInputLayout) findViewById(R.id.til_password);
-
+        TakePictureListener listener = new TakePictureListener();
+        imgTakePicture.setOnClickListener(listener);
+        imgPictureHolder.setOnClickListener(listener);
 
         etEmail.setOnFocusChangeListener(new EmailFocusChangeListener());
         etPhone.setOnFocusChangeListener(new PhoneFocusChangeListener());
@@ -64,8 +124,6 @@ public class UserFormEditorActivity extends AppCompatActivity {
         etPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         etPassword.setOnFocusChangeListener(new PasswordFocusChangeListener());
 
-
-        bView = (Button) findViewById(R.id.b_view);
         bView.setOnClickListener(new ViewButtonClick());
     }
 
@@ -190,4 +248,31 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
     }
 
+
+    class TakePictureListener implements View.OnClickListener {
+
+        // from BNRG
+
+        private String getPhotoFilename() {
+            return "IMG_" + System.currentTimeMillis() + ".jpg";
+        }
+
+        private File getPhotoFile() {
+            File externalFilesDir =
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            if (externalFilesDir == null) {
+                return null;
+            }
+            return new File(externalFilesDir, getPhotoFilename());
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            mPhotoFile = getPhotoFile();
+            Uri uri = Uri.fromFile(mPhotoFile);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
+    }
 }

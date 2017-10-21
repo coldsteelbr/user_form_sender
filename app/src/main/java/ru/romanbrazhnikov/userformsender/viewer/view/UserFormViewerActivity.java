@@ -8,11 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import ru.romanbrazhnikov.userformsender.R;
 import ru.romanbrazhnikov.userformsender.application.model.UserForm;
-import ru.romanbrazhnikov.userformsender.viewer.business.EmailSender;
+import ru.romanbrazhnikov.userformsender.viewer.business.ImplicitActions;
 
 /**
  * Created by roman on 20.10.17.
@@ -66,7 +65,7 @@ public class UserFormViewerActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             //Toast.makeText(UserFormViewerActivity.this, "Sending", Toast.LENGTH_SHORT).show();
-            EmailSender.openChooser(mUserForm, UserFormViewerActivity.this);
+            ImplicitActions.openEmailChooser(mUserForm, UserFormViewerActivity.this);
         }
     }
 }
