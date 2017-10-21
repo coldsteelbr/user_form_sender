@@ -7,6 +7,9 @@
     <string name="view">Просмотреть</string>
     <string name="send_by_mail">Отправить по е-мейлу</string>
 
+    <string name="form_data">form data</string>
+    <string name="email_format" formatted="false">Email: %s\n\rPhone: %s\n\r</string>
+
     <!-- Error messages -->
     <string name="err_email_is_wrong">Е-мейл некорректен</string>
     <string name="err_phone_is_wrong">Номер некорректен</string>
@@ -14,4 +17,5 @@
     <string name="err_password_must_contain_one_letter">Пароль должен содержать цифры</string>
     <string name="err_password_must_contain_one_digit">Пароль должен содержать буквы</string>
     <string name="err_fill_fields_correctly">Заполните все поля корректно и сделайте фото</string>
+
 </resources>

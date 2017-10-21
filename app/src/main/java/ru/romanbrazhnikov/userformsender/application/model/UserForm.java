@@ -13,6 +13,7 @@ public class UserForm implements Serializable {
     private String mPicturePath;
 
 
+
     public String getEmail() {
         return mEmail;
     }
