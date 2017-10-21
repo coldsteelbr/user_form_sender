@@ -3,6 +3,8 @@
     <!-- Layout -->
     <dimen name="md_padding_normal">16dp</dimen>
     <dimen name="md_padding_half">8dp</dimen>
+    <dimen name="md_padding_double">32dp</dimen>
+    <dimen name="md_list_item_height">72dp</dimen>
 
     <!-- Font -->
     <dimen name="text_normal">16sp</dimen>

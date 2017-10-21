@@ -12,6 +12,7 @@
     android:orientation="vertical"
     tools:context="ru.romanbrazhnikov.userformsender.editor.view.UserFormEditorActivity">
 
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/my_image_view"
         android:layout_width="100dp"

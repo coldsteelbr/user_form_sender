@@ -6,6 +6,7 @@ import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +60,8 @@ public class UserFormEditorActivity extends AppCompatActivity {
 
         etEmail.setOnFocusChangeListener(new EmailFocusChangeListener());
         etPhone.setOnFocusChangeListener(new PhoneFocusChangeListener());
+        // TODO: set custom listener
+        etPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         etPassword.setOnFocusChangeListener(new PasswordFocusChangeListener());
 
 
