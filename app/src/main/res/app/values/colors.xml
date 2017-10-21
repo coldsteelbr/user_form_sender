@@ -6,5 +6,5 @@
 
     <color name="colorAccentBlueGrey">#607D8B</color>
     <color name="colorIconGrey">#BDBDBD</color>
-
+    <color name="colorError">@android:color/holo_red_light</color>
 </resources>

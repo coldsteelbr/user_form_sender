@@ -181,7 +181,8 @@ public class UserFormEditorActivity extends AppCompatActivity {
                 UserFormViewerActivity.showActivityInstance(UserFormEditorActivity.this, mUserForm);
             } else {
                 // TODO: proper validation
-                Snackbar.make(ll_root, "ERROR", BaseTransientBottomBar.LENGTH_INDEFINITE).show();
+                Snackbar.make(ll_root, R.string.err_fill_fields_correctly, BaseTransientBottomBar.LENGTH_LONG)
+                        .show();
             }
         }
     }

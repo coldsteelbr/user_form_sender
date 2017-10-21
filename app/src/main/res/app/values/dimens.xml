@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Layout -->
-    <dimen name="md_padding_left_right">16dp</dimen>
+    <dimen name="md_padding_normal">16dp</dimen>
+    <dimen name="md_padding_half">8dp</dimen>
 
     <!-- Font -->
+    <dimen name="text_normal">16sp</dimen>
 
 </resources>

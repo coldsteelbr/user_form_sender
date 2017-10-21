@@ -13,4 +13,5 @@
     <string name="err_password_must_be_longer_than_six">Пароль должен быть не менее 6 символов</string>
     <string name="err_password_must_contain_one_letter">Пароль должен содержать цифры</string>
     <string name="err_password_must_contain_one_digit">Пароль должен содержать буквы</string>
+    <string name="err_fill_fields_correctly">Заполните все поля корректно и сделайте фото</string>
 </resources>

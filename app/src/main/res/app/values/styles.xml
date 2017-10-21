@@ -6,6 +6,33 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="buttonStyle">@style/Button</item>
+    </style>
+
+
+    <!-- BUTTONS -->
+    <style name="Button" parent="Base.Widget.AppCompat.Button">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+    </style>
+
+    <!-- TEXT FIELDS -->
+    <style name="TextInputLayoutCommon" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlNormal">@color/colorIconGrey</item>
+        <item name="colorControlActivated">@color/colorAccentBlueGrey</item>
+    </style>
+
+    <style name="CounterText" parent="TextAppearance.Design.Counter">
+        <item name="android:textColor">@color/colorIconGrey</item>
+    </style>
+
+    <style name="CounterOverflow" parent="TextAppearance.Design.Counter.Overflow">
+        <item name="android:textColor">@color/colorError</item>
+    </style>
+
+    <style name="EditTextCommon" parent="Base.V12.Widget.AppCompat.EditText">
+        <item name="android:textSize">@dimen/text_normal</item>
     </style>
 
 </resources>

@@ -13,8 +13,8 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:paddingLeft="@dimen/md_padding_left_right"
-        android:paddingRight="@dimen/md_padding_left_right"
+        android:paddingLeft="@dimen/md_padding_normal"
+        android:paddingRight="@dimen/md_padding_normal"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="1">
