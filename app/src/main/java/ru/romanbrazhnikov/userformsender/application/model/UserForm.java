@@ -1,5 +1,6 @@
 package ru.romanbrazhnikov.userformsender.application.model;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -12,7 +13,15 @@ public class UserForm implements Serializable {
     private String mPassword;
     private String mPicturePath;
 
+    private File mFile;
 
+    public File getFile() {
+        return mFile;
+    }
+
+    public void setFile(File file) {
+        mFile = file;
+    }
 
     public String getEmail() {
         return mEmail;

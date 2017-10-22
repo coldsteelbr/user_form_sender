@@ -1,6 +1,5 @@
 package ru.romanbrazhnikov.userformsender.editor.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +21,6 @@ import android.widget.LinearLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,32 +78,24 @@ public class UserFormEditorActivity extends AppCompatActivity {
     }
 
     private void updateImgHolder() {
-        if (mPhotoFile == null || !mPhotoFile.exists()) {
+        if (mUserForm.getFile() == null || !mUserForm.getFile().exists()) {
             imgPictureHolder.setImageDrawable(null);
         } else {
             Bitmap bitmap = PictureUtils.getScaledBitmap(
-                    mPhotoFile.getPath(), this);
+                    mUserForm.getFile().getPath(), this);
+
+            imgTakePicture.setVisibility(View.GONE);
+            imgPictureHolder.setVisibility(View.VISIBLE);
             imgPictureHolder.setImageBitmap(bitmap);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (requestCode == CAMERA_REQUEST) {
             if (resultCode == RESULT_OK) {
-                //Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-                imgTakePicture.setVisibility(View.GONE);
-                imgPictureHolder.setVisibility(View.VISIBLE);
+                mUserForm.setFile(mPhotoFile);
                 updateImgHolder();
-
-                Log.d("Camera: PATH", mPhotoFile.getPath());
-                Log.d("Camera: ABS:", mPhotoFile.getAbsolutePath());
-                try {
-                    Log.d("Camera: CAN:", mPhotoFile.getCanonicalPath());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -248,7 +237,6 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
     }
 
-
     class TakePictureListener implements View.OnClickListener {
 
         // from BNRG
@@ -258,12 +246,24 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
 
         private File getPhotoFile() {
-            File externalFilesDir =
-                    getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            if (externalFilesDir == null) {
+
+            ////////
+            String state = Environment.getExternalStorageState();
+            File filesDir;
+
+            // Make sure it's available
+            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                // We can read and write the media
+                filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            } else {
+                // Load another directory, probably local memory
+                filesDir = getFilesDir();
+            }
+
+            if (filesDir == null) {
                 return null;
             }
-            return new File(externalFilesDir, getPhotoFilename());
+            return new File(filesDir, getPhotoFilename());
         }
 
         @Override
