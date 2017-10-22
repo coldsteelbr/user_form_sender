@@ -32,6 +32,11 @@ public class UserFormEditorActivity extends AppCompatActivity {
 
     // CONSTANTS
     private static final int CAMERA_REQUEST = 0;
+    private static final String STATE_EMAIL = "STATE_EMAIL";
+    private static final String STATE_PHONE = "STATE_PHONE";
+    private static final String STATE_PASSWORD = "STATE_PASSWORD";
+    private static final String STATE_MODEL = "STATE_MODEL";
+    private static final String STATE_FILE = "STATE_FILE";
 
     // WIDGETS
     @BindView(R.id.img_take_picture)
@@ -70,9 +75,6 @@ public class UserFormEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_form_editor);
 
         initWidgets();
-        if (savedInstanceState != null) {
-            restoreState();
-        }
     }
 
     @Override
@@ -83,6 +85,41 @@ public class UserFormEditorActivity extends AppCompatActivity {
                 updateImgHolder();
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(STATE_MODEL, mUserForm);
+        outState.putSerializable(STATE_FILE, mPhotoFile);
+        outState.putString(STATE_EMAIL, etEmail.getText().toString());
+        outState.putString(STATE_PHONE, etPhone.getText().toString());
+        outState.putString(STATE_PASSWORD, etPassword.getText().toString());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // FILE
+        mPhotoFile = (File) savedInstanceState.getSerializable(STATE_FILE);
+
+        // MODEL
+        mUserForm = (UserForm) savedInstanceState.getSerializable(STATE_MODEL);
+
+        if (mUserForm != null) {
+            // setting image
+            if (mUserForm.getFile() == null || !mUserForm.getFile().exists()) {
+                imgPictureHolder.setVisibility(View.GONE);
+                imgTakePicture.setVisibility(View.VISIBLE);
+            } else {
+                updateImgHolder();
+            }
+        }
+
+        // TEXT FIELDS
+        etEmail.setText(savedInstanceState.getString(STATE_EMAIL));
+        etPhone.setText(savedInstanceState.getString(STATE_PHONE));
+        etPassword.setText(savedInstanceState.getString(STATE_PASSWORD));
     }
 
     private void updateImgHolder() {
@@ -109,10 +146,6 @@ public class UserFormEditorActivity extends AppCompatActivity {
         etPassword.setOnFocusChangeListener(new PasswordFocusChangeListener());
 
         bView.setOnClickListener(new ViewButtonClick());
-    }
-
-    private void restoreState() {
-        // TODO: restore state
     }
 
     private boolean isValid() {
