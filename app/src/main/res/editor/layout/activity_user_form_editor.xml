@@ -12,7 +12,7 @@
     android:orientation="vertical"
     tools:context="ru.romanbrazhnikov.userformsender.editor.view.UserFormEditorActivity">
 
-
+    <!-- TAKE PICTURE -->
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_take_picture"
         android:layout_width="@dimen/photo_button_size"
@@ -27,6 +27,7 @@
         fresco:roundingBorderWidth="2dp"
         fresco:roundingBorderColor="@color/colorAccent"/>
 
+    <!-- PICTURE HOLDER -->
     <com.facebook.drawee.view.SimpleDraweeView
         android:visibility="gone"
         android:id="@+id/img_picture_holder"
