@@ -1,12 +1,17 @@
 package ru.romanbrazhnikov.userformsender.editor.view;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +31,7 @@ public class UserFormEditorActivity extends AppCompatActivity {
     // CONSTANTS
     private static final int CAMERA_REQUEST = 0;
     private static final String STATE_FILE = "STATE_FILE";
-
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     // MODEL
     private EditorScreenModel mScreenModel;
 
@@ -106,42 +111,90 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    runCamera();
+
+                } else {
+
+                    // TODO: show alert
+                }
+            }
+        }
+    }
+
+    // from BNRG
+
+    private String getPhotoFilename() {
+        return "IMG_" + System.currentTimeMillis() + ".jpg";
+    }
+
+    private File getPhotoFile() {
+
+        ////////
+        String state = Environment.getExternalStorageState();
+        File filesDir;
+
+        // Make sure it's available
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        } else {
+            // Load another directory, probably local memory
+            filesDir = getFilesDir();
+        }
+
+        if (filesDir == null) {
+            return null;
+        }
+        return new File(filesDir, getPhotoFilename());
+    }
+
+    private void runCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        mPhotoFile = getPhotoFile();
+        Uri uri = Uri.fromFile(mPhotoFile);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
     public class TakePictureListener implements View.OnClickListener {
-
-        // from BNRG
-
-        private String getPhotoFilename() {
-            return "IMG_" + System.currentTimeMillis() + ".jpg";
-        }
-
-        private File getPhotoFile() {
-
-            ////////
-            String state = Environment.getExternalStorageState();
-            File filesDir;
-
-            // Make sure it's available
-            if (Environment.MEDIA_MOUNTED.equals(state)) {
-                // We can read and write the media
-                filesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            } else {
-                // Load another directory, probably local memory
-                filesDir = getFilesDir();
-            }
-
-            if (filesDir == null) {
-                return null;
-            }
-            return new File(filesDir, getPhotoFilename());
-        }
 
         @Override
         public void onClick(View view) {
-            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            mPhotoFile = getPhotoFile();
-            Uri uri = Uri.fromFile(mPhotoFile);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            // Check for permission on API23+
+            if (Build.VERSION.SDK_INT >= 23) {
+                // checking
+                int permissionCheck = ContextCompat.checkSelfPermission(UserFormEditorActivity.this,
+                        Manifest.permission.CAMERA);
+
+                // Here, thisActivity is the current activity
+                if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(UserFormEditorActivity.this,
+                            Manifest.permission.CAMERA)) {
+
+                        // TODO: show explanation
+                    } else {
+
+                        // No explanation needed, we can request the permission.
+                        ActivityCompat.requestPermissions(UserFormEditorActivity.this,
+                                new String[]{Manifest.permission.CAMERA},
+                                MY_PERMISSIONS_REQUEST_CAMERA);
+                    }
+                }
+            } else {
+                // Just run camera
+                runCamera();
+            }
+
         }
     }
 }

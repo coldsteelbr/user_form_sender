@@ -168,6 +168,7 @@ public class EditorScreenModel implements Serializable {
         if (etPassword.getText().toString().length() > 0) {
             @StringRes
             int errMessageId = 0;
+
             // finding error
             if (etPassword.getText().length() < 6) {
                 errMessageId = R.string.err_password_must_be_longer_than_six;
