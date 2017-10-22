@@ -18,7 +18,6 @@ public class PictureUtils {
         return getScaledBitmap(path, size.x, size.y);
     }
 
-
     public static Bitmap getScaledBitmap(String path, int destWidth, int destHeight) {
         // Read in the dimensions of the image on disk
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -43,5 +42,6 @@ public class PictureUtils {
         // Read in and create final bitmap
         return BitmapFactory.decodeFile(path, options);
     }
+
 
 }

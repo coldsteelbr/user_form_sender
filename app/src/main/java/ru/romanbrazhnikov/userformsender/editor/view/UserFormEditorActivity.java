@@ -1,7 +1,6 @@
 package ru.romanbrazhnikov.userformsender.editor.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.romanbrazhnikov.userformsender.R;
 import ru.romanbrazhnikov.userformsender.application.model.UserForm;
-import ru.romanbrazhnikov.userformsender.utils.PictureUtils;
 import ru.romanbrazhnikov.userformsender.utils.ValidationUtils;
 import ru.romanbrazhnikov.userformsender.viewer.view.UserFormViewerActivity;
 
@@ -77,19 +75,6 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void updateImgHolder() {
-        if (mUserForm.getFile() == null || !mUserForm.getFile().exists()) {
-            imgPictureHolder.setImageDrawable(null);
-        } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(
-                    mUserForm.getFile().getPath(), this);
-
-            imgTakePicture.setVisibility(View.GONE);
-            imgPictureHolder.setVisibility(View.VISIBLE);
-            imgPictureHolder.setImageBitmap(bitmap);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST) {
@@ -97,6 +82,16 @@ public class UserFormEditorActivity extends AppCompatActivity {
                 mUserForm.setFile(mPhotoFile);
                 updateImgHolder();
             }
+        }
+    }
+
+    private void updateImgHolder() {
+        if (mUserForm.getFile() == null || !mUserForm.getFile().exists()) {
+            imgPictureHolder.setImageDrawable(null);
+        } else {
+            imgTakePicture.setVisibility(View.GONE);
+            imgPictureHolder.setVisibility(View.VISIBLE);
+            imgPictureHolder.setImageURI(Uri.fromFile(mUserForm.getFile()));
         }
     }
 

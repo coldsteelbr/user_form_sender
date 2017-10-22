@@ -27,13 +27,18 @@
         fresco:roundingBorderWidth="2dp"
         fresco:roundingBorderColor="@color/colorAccent"/>
 
-    <ImageView
+
+    <com.facebook.drawee.view.SimpleDraweeView
         android:visibility="gone"
         android:id="@+id/img_picture_holder"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
+        fresco:viewAspectRatio="2"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/md_padding_normal"/>
+        android:layout_margin="@dimen/md_padding_normal"
+        fresco:actualImageScaleType="fitCenter"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:backgroundImage="@color/colorAccentBlueGrey"/>
 
     <!-- E-MAIL -->
     <android.support.design.widget.TextInputLayout
