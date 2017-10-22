@@ -12,7 +12,11 @@
         android:id="@+id/img_picture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         fresco:placeholderImage="@color/colorAccent"
+        fresco:actualImageScaleType="fitCenter"
+        fresco:placeholderImageScaleType="fitCenter"
+        fresco:backgroundImage="@color/colorAccentBlueGrey"
         fresco:viewAspectRatio="1.7"/>
 
 

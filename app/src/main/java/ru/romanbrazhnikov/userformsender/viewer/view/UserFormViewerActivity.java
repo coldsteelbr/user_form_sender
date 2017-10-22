@@ -2,7 +2,6 @@ package ru.romanbrazhnikov.userformsender.viewer.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,31 +63,6 @@ public class UserFormViewerActivity extends AppCompatActivity {
         bSendByEmail.setOnClickListener(new SendByEmailClick());
 
         imgPicture.setImageURI(Uri.fromFile(mUserForm.getFile()));
-        ////
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(mUserForm.getFile().getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-        boolean isVertical = true ;
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                isVertical = false ;
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                isVertical =false ;
-                break;
-        }
-        ////////////
-
-        if(isVertical){
-            imgPicture.setRotation(90);
-        }
-
 
         tvEmail.setText(mUserForm.getEmail());
         tvPhone.setText(mUserForm.getPhone());
@@ -101,7 +73,6 @@ public class UserFormViewerActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            //Toast.makeText(UserFormViewerActivity.this, "Sending", Toast.LENGTH_SHORT).show();
             ImplicitActions.openEmailChooser(mUserForm, UserFormViewerActivity.this);
         }
     }
