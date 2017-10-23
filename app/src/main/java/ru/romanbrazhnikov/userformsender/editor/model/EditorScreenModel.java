@@ -3,9 +3,7 @@ package ru.romanbrazhnikov.userformsender.editor.model;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,69 +12,62 @@ import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.romanbrazhnikov.userformsender.R;
 import ru.romanbrazhnikov.userformsender.application.model.UserForm;
 import ru.romanbrazhnikov.userformsender.editor.view.UserFormEditorActivity;
-import ru.romanbrazhnikov.userformsender.utils.ValidationUtils;
 
 /**
  * Created by roman on 22.10.17.
  */
 
-public class EditorScreenModel implements Serializable {
+public class EditorScreenModel implements ScreenModel {
 
     // CONSTANTS
-    private static final String STATE_EMAIL = "STATE_EMAIL";
-    private static final String STATE_PHONE = "STATE_PHONE";
-    private static final String STATE_PASSWORD = "STATE_PASSWORD";
+    private static final String KEY_EMAIL = "KEY_EMAIL";
+    private static final String KEY_PHONE = "KEY_PHONE";
+    private static final String KEY_PASSWORD = "KEY_PASSWORD";
     private static final String STATE_MODEL = "STATE_MODEL";
 
     // WIDGETS
     @BindView(R.id.img_take_picture)
     SimpleDraweeView imgTakePicture;
-
     @BindView(R.id.img_picture_holder)
     SimpleDraweeView imgPictureHolder;
 
-    @BindView(R.id.et_email)
-    EditText etEmail;
+    // MODELS
+    private Map<String, TextFieldModel> mTextFieldModels = new HashMap<>();
+    private UserForm mUserForm = new UserForm();
 
-    @BindView(R.id.et_phone)
-    EditText etPhone;
-
-    @BindView(R.id.et_password)
-    EditText etPassword;
-
-    @BindView(R.id.til_email)
-    TextInputLayout tilEmail;
-
-    @BindView(R.id.til_phone)
-    TextInputLayout tilPhone;
-
-    @BindView(R.id.til_password)
-    TextInputLayout tilPassword;
-
-    UserForm mUserForm = new UserForm();
-
-    private LinearLayout ll_root;
+    // FIELDS
     private Context mContext;
     private boolean hasPicture = false;
 
-    public EditorScreenModel(LinearLayout root, Context context) {
+    public EditorScreenModel(LinearLayout ll_root, Context context) {
         mContext = context;
-        ll_root = root;
 
         ButterKnife.bind(this, ll_root);
 
-        etEmail.setOnFocusChangeListener(new EmailFocusChangeListener());
-        etPhone.setOnFocusChangeListener(new PhoneFocusChangeListener());
-        // TODO: set custom listener
-        etPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        etPassword.setOnFocusChangeListener(new PasswordFocusChangeListener());
+        // INIT EMAIL
+        TextInputLayout tilEmail = ll_root.findViewById(R.id.til_email);
+        EditText etEmail = ll_root.findViewById(R.id.et_email);
+        mTextFieldModels.put(KEY_EMAIL, new EmailTextFieldModel(tilEmail, etEmail, context));
+
+
+        // INIT PHONE
+        TextInputLayout tilPhone = ll_root.findViewById(R.id.til_phone);
+        EditText etPhone = ll_root.findViewById(R.id.et_phone);
+        mTextFieldModels.put(KEY_PHONE, new PhoneTextFieldModel(tilPhone, etPhone, context));
+
+        // INIT PASSWORD
+        TextInputLayout tilPassword = ll_root.findViewById(R.id.til_password);
+        EditText etPassword = ll_root.findViewById(R.id.et_password);
+        mTextFieldModels.put(KEY_PASSWORD, new PasswordTextFieldModel(tilPassword, etPassword, context));
+
     }
 
     public void setTakePictureListener(UserFormEditorActivity.TakePictureListener listener) {
@@ -84,53 +75,30 @@ public class EditorScreenModel implements Serializable {
         imgPictureHolder.setOnClickListener(listener);
     }
 
-
     public void setFile(File photoFile) {
         mUserForm.setFile(photoFile);
         updateImgHolder();
     }
 
+    @Override
     public void saveState(Bundle outState) {
         outState.putSerializable(STATE_MODEL, mUserForm);
-        outState.putString(STATE_EMAIL, etEmail.getText().toString());
-        outState.putString(STATE_PHONE, etPhone.getText().toString());
-        outState.putString(STATE_PASSWORD, etPassword.getText().toString());
+
+        for (ScreenModel currentModel :
+                mTextFieldModels.values()) {
+            currentModel.saveState(outState);
+        }
     }
 
+    @Override
     public void restoreState(Bundle savedInstanceState) {
         // MODEL
         mUserForm = (UserForm) savedInstanceState.getSerializable(STATE_MODEL);
 
         // TEXT FIELDS
-        etEmail.setText(savedInstanceState.getString(STATE_EMAIL));
-        etPhone.setText(savedInstanceState.getString(STATE_PHONE));
-        etPassword.setText(savedInstanceState.getString(STATE_PASSWORD));
-    }
-
-    class EmailFocusChangeListener implements View.OnFocusChangeListener {
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (!hasFocus) {
-                validateEmail();
-            }
-        }
-    }
-
-    class PhoneFocusChangeListener implements View.OnFocusChangeListener {
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (!hasFocus) {
-                validatePhone();
-            }
-        }
-    }
-
-    class PasswordFocusChangeListener implements View.OnFocusChangeListener {
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (!hasFocus) {
-                validatePassword();
-            }
+        for (ScreenModel currentModel :
+                mTextFieldModels.values()) {
+            currentModel.restoreState(savedInstanceState);
         }
     }
 
@@ -151,80 +119,24 @@ public class EditorScreenModel implements Serializable {
         }
     }
 
-    private void validateEmail() {
-        if (etEmail.getText().toString().length() > 0) {
-            if (ValidationUtils.isValidEmail(etEmail.getText().toString())) {
-                tilEmail.setErrorEnabled(false);
-            } else {
-                tilEmail.setErrorEnabled(true);
-                tilEmail.setError(mContext.getString(R.string.err_email_is_wrong));
-            }
-        } else {
-            tilEmail.setErrorEnabled(false);
-        }
-    }
-
-    private void validatePassword() {
-        if (etPassword.getText().toString().length() > 0) {
-            @StringRes
-            int errMessageId = 0;
-
-            // finding error
-            if (etPassword.getText().length() < 6) {
-                errMessageId = R.string.err_password_must_be_longer_than_six;
-            } else if (ValidationUtils.containsDigit(etPassword.getText().toString())) {
-                errMessageId = R.string.err_password_must_contain_one_digit;
-            } else if (ValidationUtils.containsLetter(etPassword.getText().toString())) {
-                errMessageId = R.string.err_password_must_contain_one_letter;
-            }
-
-            // setting error if any
-            if (errMessageId == 0) {
-                tilPassword.setErrorEnabled(false);
-            } else {
-                tilPassword.setErrorEnabled(true);
-
-                tilPassword.setError(mContext.getString(errMessageId));
-            }
-        } else {
-            tilPassword.setErrorEnabled(false);
-        }
-    }
-
-    private void validatePhone() {
-        if (etPhone.getText().toString().length() > 0) {
-            if (ValidationUtils.isValidPhone(etPhone.getText().toString())) {
-                tilPhone.setErrorEnabled(false);
-            } else {
-                tilPhone.setErrorEnabled(true);
-                tilPhone.setError(mContext.getString(R.string.err_phone_is_wrong));
-            }
-        } else {
-            tilPhone.setErrorEnabled(false);
-        }
-    }
-
+    @Override
     public boolean isValid() {
+        for (ScreenModel currentModel :
+                mTextFieldModels.values()) {
+            currentModel.isValid();
+        }
 
-        validateEmail();
-        validatePassword();
-        validatePhone();
         validatePicture();
 
         if (!hasPicture) {
             return false;
         }
 
-        if (tilEmail.isErrorEnabled() || etEmail.getText().length() == 0) {
-            return false;
-        }
-
-        if (tilPhone.isErrorEnabled() || etPhone.getText().length() == 0) {
-            return false;
-        }
-
-        if (tilPassword.isErrorEnabled() || etPassword.getText().length() == 0) {
-            return false;
+        for (TextFieldModel currentModel :
+                mTextFieldModels.values()) {
+            if (currentModel.isErrorOrEmpty()) {
+                return false;
+            }
         }
 
         // VALIDATION PASSED
@@ -232,9 +144,9 @@ public class EditorScreenModel implements Serializable {
     }
 
     public UserForm getPopulatedUserForm() {
-        mUserForm.setEmail(etEmail.getText().toString());
-        mUserForm.setPhone(etPhone.getText().toString());
-        mUserForm.setPassword(etPassword.getText().toString());
+        mUserForm.setEmail(mTextFieldModels.get(KEY_EMAIL).getValue());
+        mUserForm.setPhone(mTextFieldModels.get(KEY_PHONE).getValue());
+        mUserForm.setPassword(mTextFieldModels.get(KEY_PASSWORD).getValue());
         return mUserForm;
     }
 
