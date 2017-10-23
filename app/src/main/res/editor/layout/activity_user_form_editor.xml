@@ -24,7 +24,7 @@
         fresco:actualImageScaleType="center"
         fresco:roundAsCircle="true"
         fresco:backgroundImage="@color/colorAccentBlueGrey"
-        fresco:roundingBorderWidth="2dp"
+        fresco:roundingBorderWidth="@dimen/photo_border_width"
         fresco:roundingBorderColor="@color/colorAccent"/>
 
     <!-- PICTURE HOLDER -->
@@ -53,7 +53,6 @@
             android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:inputType="textEmailAddress"
             android:hint="@string/email"/>
 
@@ -67,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/md_padding_normal"
         app:counterEnabled="true"
-        app:counterMaxLength="12"
+        app:counterMaxLength="@integer/phone_max_length"
         app:counterTextAppearance="@style/CounterText"
         app:counterOverflowTextAppearance="@style/CounterOverflow">
 
@@ -100,6 +99,7 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <!-- BUTTON "VIEW" -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

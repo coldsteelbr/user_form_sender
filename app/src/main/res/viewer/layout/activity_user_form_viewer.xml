@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context="ru.romanbrazhnikov.userformsender.editor.view.UserFormEditorActivity">
 
+    <!-- PICTURE -->
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_picture"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         fresco:viewAspectRatio="1.7"/>
 
 
-
+    <!-- FIELDS -->
     <LinearLayout
         android:orientation="vertical"
         android:paddingLeft="@dimen/md_padding_normal"
@@ -54,6 +55,7 @@
             android:drawableStart="@drawable/ic_password"/>
     </LinearLayout>
 
+    <!-- BUTTON "SEND" -->
     <Button
         android:id="@+id/b_send_by_email"
         android:text="@string/send_by_mail"
