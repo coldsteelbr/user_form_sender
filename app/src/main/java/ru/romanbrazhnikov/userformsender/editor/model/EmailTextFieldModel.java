@@ -10,6 +10,8 @@ import ru.romanbrazhnikov.userformsender.utils.ValidationUtils;
 
 /**
  * Created by roman on 23.10.17.
+ * <p>
+ * Represents Email text field model
  */
 
 public class EmailTextFieldModel extends TextFieldModel {

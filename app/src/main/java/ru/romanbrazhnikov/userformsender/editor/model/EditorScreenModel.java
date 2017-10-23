@@ -23,7 +23,10 @@ import ru.romanbrazhnikov.userformsender.editor.view.UserFormEditorActivity;
 
 /**
  * Created by roman on 22.10.17.
+ * <p>
+ * Represents Edit Screen with its picture button and text fields
  */
+
 
 public class EditorScreenModel implements ScreenModel {
 
@@ -50,6 +53,7 @@ public class EditorScreenModel implements ScreenModel {
     public EditorScreenModel(LinearLayout ll_root, Context context) {
         mContext = context;
 
+        // Binding widgets
         ButterKnife.bind(this, ll_root);
 
         // INIT EMAIL
@@ -70,11 +74,17 @@ public class EditorScreenModel implements ScreenModel {
 
     }
 
+    /**
+     * Sets TakePictureListener for both TakePicture & PictureHolder
+     */
     public void setTakePictureListener(UserFormEditorActivity.TakePictureListener listener) {
         imgTakePicture.setOnClickListener(listener);
         imgPictureHolder.setOnClickListener(listener);
     }
 
+    /**
+     * Sets model's file and loads it to the picture holder
+     */
     public void setFile(File photoFile) {
         mUserForm.setFile(photoFile);
         updateImgHolder();
@@ -102,6 +112,9 @@ public class EditorScreenModel implements ScreenModel {
         }
     }
 
+    /**
+     * Checks if picture is taken and highlights TakePicture's border in case of error
+     */
     private void validatePicture() {
         if (mUserForm.getFile() == null || !mUserForm.getFile().exists()) {
 
@@ -111,27 +124,29 @@ public class EditorScreenModel implements ScreenModel {
 
             hasPicture = false;
         } else {
-            RoundingParams roundingParams = imgTakePicture.getHierarchy().getRoundingParams();
-            roundingParams.setBorderColor(mContext.getResources().getColor(R.color.colorAccent));
-            imgTakePicture.getHierarchy().setRoundingParams(roundingParams);
-
             hasPicture = true;
         }
     }
 
+    /**
+     * Validate all the fields and shows errors if any
+     */
     @Override
     public boolean isValid() {
+        // validating nested screen models
         for (ScreenModel currentModel :
                 mTextFieldModels.values()) {
             currentModel.isValid();
         }
 
+        // validating if picture is taken
         validatePicture();
-
         if (!hasPicture) {
             return false;
         }
 
+        // checking for error after the validation
+        // and empty fileds
         for (TextFieldModel currentModel :
                 mTextFieldModels.values()) {
             if (currentModel.isErrorOrEmpty()) {
@@ -143,6 +158,9 @@ public class EditorScreenModel implements ScreenModel {
         return true;
     }
 
+    /**
+     * Populates UserForm model with data from the screen model
+     */
     public UserForm getPopulatedUserForm() {
         mUserForm.setEmail(mTextFieldModels.get(KEY_EMAIL).getValue());
         mUserForm.setPhone(mTextFieldModels.get(KEY_PHONE).getValue());
@@ -150,6 +168,9 @@ public class EditorScreenModel implements ScreenModel {
         return mUserForm;
     }
 
+    /**
+     * Loads taken picture to the PictureHolder and hides the TakePicture
+     */
     private void updateImgHolder() {
         if (mUserForm.getFile() == null || !mUserForm.getFile().exists()) {
             imgPictureHolder.setImageDrawable(null);

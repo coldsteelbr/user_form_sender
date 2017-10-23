@@ -11,6 +11,8 @@ import ru.romanbrazhnikov.userformsender.utils.ValidationUtils;
 
 /**
  * Created by roman on 23.10.17.
+ * <p>
+ * Represents Phone text field screen model
  */
 
 public class PhoneTextFieldModel extends TextFieldModel {

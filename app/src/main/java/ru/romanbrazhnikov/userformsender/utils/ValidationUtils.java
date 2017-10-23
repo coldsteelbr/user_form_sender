@@ -4,6 +4,8 @@ import android.util.Patterns;
 
 /**
  * Created by roman on 20.10.17.
+ * <p>
+ * Util class containing a set of validating rules for text field of different types
  */
 
 public class ValidationUtils {

@@ -9,6 +9,8 @@ import ru.romanbrazhnikov.userformsender.application.model.UserForm;
 
 /**
  * Created by roman on 21.10.17.
+ * <p>
+ * Tool class to open "Email chooser" and send UserForm data
  */
 
 public class ImplicitActions {
@@ -36,5 +38,4 @@ public class ImplicitActions {
 
     }
 
-    // TODO: CAMERA HERE
 }

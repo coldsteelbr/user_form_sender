@@ -32,6 +32,7 @@ public class UserFormEditorActivity extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 0;
     private static final String STATE_FILE = "STATE_FILE";
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+
     // MODEL
     private EditorScreenModel mScreenModel;
 
@@ -56,6 +57,7 @@ public class UserFormEditorActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST) {
             if (resultCode == RESULT_OK) {
+                // Saving file of taken picture
                 mScreenModel.setFile(mPhotoFile);
             }
         }
@@ -83,9 +85,10 @@ public class UserFormEditorActivity extends AppCompatActivity {
         mScreenModel.setFile(mPhotoFile);
     }
 
-
+    /**
+     * Binds views and sets listeners
+     */
     private void initWidgets() {
-
         ButterKnife.bind(this);
 
         mScreenModel = new EditorScreenModel(ll_root, this);
@@ -96,15 +99,16 @@ public class UserFormEditorActivity extends AppCompatActivity {
         bView.setOnClickListener(new ViewButtonClick());
     }
 
-
-    class ViewButtonClick implements View.OnClickListener {
+    /**
+     * Tries to get form data and open the viewer. Show error message if any
+     */
+    private class ViewButtonClick implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             if (mScreenModel.isValid()) {
                 UserForm userForm = mScreenModel.getPopulatedUserForm();
                 UserFormViewerActivity.showActivityInstance(UserFormEditorActivity.this, userForm);
             } else {
-                // TODO: proper validation
                 Snackbar.make(ll_root, R.string.err_fill_fields_correctly, BaseTransientBottomBar.LENGTH_LONG)
                         .show();
             }
@@ -113,7 +117,9 @@ public class UserFormEditorActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String permissions[],
+                                           int[] grantResults) {
+        // Requesting camera run-time permission and run camera if granted
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
@@ -129,15 +135,17 @@ public class UserFormEditorActivity extends AppCompatActivity {
         }
     }
 
-    // from BNRG
-
+    /**
+     * Generate file name for a future picture file
+     */
     private String getPhotoFilename() {
         return "IMG_" + System.currentTimeMillis() + ".jpg";
     }
 
+    /**
+     * Creates File to keep future picture
+     */
     private File getPhotoFile() {
-
-        ////////
         String state = Environment.getExternalStorageState();
         File filesDir;
 
@@ -156,6 +164,9 @@ public class UserFormEditorActivity extends AppCompatActivity {
         return new File(filesDir, getPhotoFilename());
     }
 
+    /**
+     * Runs standard camera and create empty File to keep taken picture
+     */
     private void runCamera() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         mPhotoFile = getPhotoFile();
@@ -164,6 +175,9 @@ public class UserFormEditorActivity extends AppCompatActivity {
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
+    /**
+     * Launches camera, asking for run-time permission for API23+
+     */
     public class TakePictureListener implements View.OnClickListener {
 
         @Override

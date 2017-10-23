@@ -42,6 +42,9 @@ public class UserFormViewerActivity extends AppCompatActivity {
     // FIELDS
     private UserForm mUserForm;
 
+    /**
+     * Static method starting Viewer activity with populated user form
+     */
     public static void showActivityInstance(Context context, UserForm userForm) {
         Intent intent = new Intent(context, UserFormViewerActivity.class);
         intent.putExtra(EXTRA_CUSTOM_USER_FORM, userForm);
@@ -59,11 +62,17 @@ public class UserFormViewerActivity extends AppCompatActivity {
         initWidgets();
     }
 
+    /**
+     * Inits values and sets listeners
+     */
     private void initWidgets() {
+        // setting action for "Send by email" button
         bSendByEmail.setOnClickListener(new SendByEmailClick());
 
+        // setting up the picture
         imgPicture.setImageURI(Uri.fromFile(mUserForm.getFile()));
 
+        // populating text fields
         tvEmail.setText(mUserForm.getEmail());
         tvPhone.setText(mUserForm.getPhone());
         tvPassword.setText(mUserForm.getPassword());

@@ -11,6 +11,8 @@ import ru.romanbrazhnikov.userformsender.utils.ValidationUtils;
 
 /**
  * Created by roman on 23.10.17.
+ * <p>
+ * Represents Password text field screen model
  */
 
 public class PasswordTextFieldModel extends TextFieldModel {

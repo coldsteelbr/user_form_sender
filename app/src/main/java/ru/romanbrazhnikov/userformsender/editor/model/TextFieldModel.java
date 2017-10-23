@@ -7,6 +7,8 @@ import android.widget.EditText;
 
 /**
  * Created by roman on 23.10.17.
+ * Represents a TextInputLayout screen model with features of checking for errors,
+ * saving and restoring its states
  */
 
 public abstract class TextFieldModel implements ScreenModel {
